@@ -3,6 +3,9 @@ import pandas as pd
 import joblib
 from huggingface_hub import hf_hub_download
 
+os.environ["STREAMLIT_SERVER_HEADLESS"] = "true"
+os.environ["STREAMLIT_SERVER_ENABLE_CORS"] = "false"
+
 MODEL_ID = "PalkiiS/tourism-package-prediction-model"
 
 model_path = hf_hub_download(

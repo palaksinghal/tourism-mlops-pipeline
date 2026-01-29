@@ -1,0 +1,44 @@
+name: MLOps Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mlops-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r tourism_mlops_project/deployment/requirements.txt
+          pip install pandas scikit-learn datasets huggingface_hub joblib
+
+      - name: Verify Hugging Face dataset access
+        run: |
+          python - <<EOF
+          from datasets import load_dataset
+          ds = load_dataset("PalkiiS/tourism-package-prediction-data")
+          print(ds)
+          EOF
+
+      - name: Verify Hugging Face model access
+        run: |
+          python - <<EOF
+          from huggingface_hub import hf_hub_download
+          path = hf_hub_download(
+              repo_id="PalkiiS/tourism-package-prediction-model",
+              filename="best_model.joblib",
+              repo_type="model"
+          )
+          print("Model downloaded at:", path)
+          EOF
